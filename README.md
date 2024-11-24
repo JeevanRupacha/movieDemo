@@ -8,9 +8,6 @@ MovieDemo is an Android application built with Jetpack Compose that allows users
 
 * **Movie Discovery:** Browse trending and popular movies with ease.
 * **Detailed Information:** View comprehensive details for each movie, including cast, crew, reviews, and trailers.
-* **Offline Support:** Cache movie data for offline access.
-* **Search Functionality:** Easily find movies by title.
-* **Favorites:** Mark movies as favorites for quick access later.
 
 ## Technologies
 
@@ -21,7 +18,6 @@ This project leverages a variety of cutting-edge technologies and libraries, inc
 * **Kotlin Flow:** Provides reactive streams for observing data changes and seamlessly updating the UI.
 * **Hilt:** A dependency injection library for Android that promotes testability and modularity.
 * **Retrofit:** A type-safe HTTP client for Android and Java that simplifies interactions with REST APIs.
-* **Room:** A persistence library that provides an abstraction layer over SQLite, making it easier to work with databases.
 * **Coil:** An image loading library that efficiently loads and displays images in the UI.
 * **Timber:** A logging library that simplifies debugging and tracking application behavior.
 * **Data Paginator** - helps handling pagination data
