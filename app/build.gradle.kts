@@ -41,9 +41,12 @@ android {
         }
     }
 
-    packagingOptions {
+    packaging {
+        resources.pickFirsts.add("META-INF/MANIFEST.MF")
         resources {
-            merges.add("META-INF/LICENSE.md") // Merge all LICENSE.md files into one
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            merges.add("META-INF/LICENSE.md")
+            merges.add("META-INF/LICENSE-notice.md")
         }
     }
 

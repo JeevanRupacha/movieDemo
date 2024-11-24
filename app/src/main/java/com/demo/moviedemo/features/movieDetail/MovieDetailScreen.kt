@@ -30,8 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,6 +43,7 @@ import coil.request.ImageRequest
 import com.demo.moviedemo.R
 import com.demo.moviedemo.core.ui.topAppBar.TopAppBar
 import com.demo.moviedemo.core.utils.GetImageURL
+import com.demo.moviedemo.core.utils.TestTag
 import com.demo.moviedemo.data.model.Genre
 import com.demo.moviedemo.data.model.ProductionCountry
 import com.demo.moviedemo.data.model.SpokenLanguage
@@ -139,7 +143,9 @@ private fun MovieDetailCard(
         modifier = Modifier.padding(
             horizontal = 16.dp,
             vertical = 16.dp
-        ),
+        )
+            .testTag(TestTag.MOVIE_DETAIL)
+        ,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),

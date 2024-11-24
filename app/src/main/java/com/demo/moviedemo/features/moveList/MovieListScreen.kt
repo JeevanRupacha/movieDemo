@@ -31,7 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,6 +46,7 @@ import com.demo.moviedemo.R
 import com.demo.moviedemo.core.theme.MovieDemoTheme
 import com.demo.moviedemo.core.utils.GetImageURL
 import com.demo.moviedemo.core.utils.LocalDimension
+import com.demo.moviedemo.core.utils.TestTag
 import com.demo.moviedemo.data.model.MovieDetail
 import com.demo.moviedemo.features.moveList.components.MovieListTitle
 
@@ -107,7 +111,8 @@ fun MovieList(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(bottom = 32.dp, top = 8.dp)
+        contentPadding = PaddingValues(bottom = 32.dp, top = 8.dp),
+        modifier = Modifier.testTag(TestTag.MOVIE_GRID)
     ) {
         items(
             items = movies,
@@ -142,7 +147,9 @@ fun MovieItem(
     onClick: (id: Long) -> Unit
 ) {
     Column(
-        modifier = Modifier.clickable{ onClick(movie.id) }
+        modifier = Modifier
+            .clickable { onClick(movie.id) }
+            .semantics { contentDescription = TestTag.MOVIE_GRID} //testing
     ) {
         Card(
             shape = RoundedCornerShape(12.dp),
