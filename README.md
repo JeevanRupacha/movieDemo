@@ -33,10 +33,9 @@ Movie Demo follows a **MVVM (Model-View-ViewModel)** architecture pattern, promo
    * **ViewModels:** Expose data and state to the UI and handle user interactions.
 
 2. **Data Layer:**
-   * **Repository:** Acts as a single source of truth for movie data, abstracting access to both local and remote data sources.
+   * **Repository:** Acts as a single source of truth for movie data, abstracting access to remote data sources.
    * **Data Sources:**
       * **Remote Data Source (TMDB API):** Fetches movie data from the TMDb API using Retrofit.
-      * **Local Data Source (Room):** Caches movie data locally using the Room database for offline access.
 
 3. **Domain Layer:**
    * **Use Cases:** Encapsulate business logic and orchestrate the flow of data between the UI and data layers.
