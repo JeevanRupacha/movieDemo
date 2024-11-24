@@ -24,7 +24,7 @@ This project leverages a variety of cutting-edge technologies and libraries, inc
 
 ## Architecture
 
-Movie Mania follows a **MVVM (Model-View-ViewModel)** architecture pattern, promoting a clear separation of concerns and making the codebase maintainable and testable.
+Movie Demo follows a **MVVM (Model-View-ViewModel)** architecture pattern, promoting a clear separation of concerns and making the codebase maintainable and testable.
 
 **Here's a breakdown of the architecture layers:**
 
@@ -41,7 +41,6 @@ Movie Mania follows a **MVVM (Model-View-ViewModel)** architecture pattern, prom
 3. **Domain Layer:**
    * **Use Cases:** Encapsulate business logic and orchestrate the flow of data between the UI and data layers.
 
-**Architecture Diagram:**
 
 ## Components
 
