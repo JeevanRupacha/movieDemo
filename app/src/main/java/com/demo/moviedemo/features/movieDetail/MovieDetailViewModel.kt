@@ -32,15 +32,16 @@ class MovieDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(MovieDetailState())
     val state = _state.asStateFlow()
 
+    private var coroutineScope = viewModelScope
+
     init {
         id?.let { getMovieDetail(it) }
     }
 
     fun getMovieDetail(
         id: Long,
-        scope: CoroutineScope = viewModelScope
     ) {
-        scope.launch {
+        coroutineScope.launch {
             _state.update {
                 _state.value.copy(
                     loadingState = LoadingState.LOADING,
@@ -75,5 +76,9 @@ class MovieDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setCoroutineScope(scope: CoroutineScope){
+        this.coroutineScope = scope
     }
 }

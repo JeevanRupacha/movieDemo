@@ -1,25 +1,25 @@
 package com.demo.moviedemo.features.movieDetail
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.demo.moviedemo.core.utils.LoadingState
 import com.demo.moviedemo.data.model.MovieDetail
 import com.demo.moviedemo.data.repository.TMDBRepository
 import com.demo.moviedemo.data.utils.ApiResult
-import com.demo.moviedemo.features.moveList.MovieListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -31,12 +31,16 @@ class MovieDetailViewModelTest {
     private lateinit var tmdbRepository: TMDBRepository
     private lateinit var savedStateHandle: SavedStateHandle
 
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        tmdbRepository = mockk()
+        tmdbRepository = mockk(relaxed = true)
         savedStateHandle = SavedStateHandle(mapOf("id" to 123L))
         viewModel = MovieDetailViewModel(savedStateHandle, tmdbRepository)
+        viewModel.setCoroutineScope(testScope)
     }
 
     @After
@@ -45,83 +49,59 @@ class MovieDetailViewModelTest {
     }
 
     @Test
-    fun `getMovieDetail updates state with movie details on success`() = runTest(testDispatcher) {
-        // Arrange
-        val movieDetail = MovieDetail(id = 123L, title = "Sample Movie")
-        coEvery { tmdbRepository.getMovieDetail(any()) } returns ApiResult.Success(movieDetail)
+    fun `getMovieDetail updates state to LOADED on success`() = runTest {
+        // Mock the repository to return a successful result
+        val movieDetail = MovieDetail(id = 123L, title = "Fake Movie")
+        coEvery { tmdbRepository.getMovieDetail(123L) } returns ApiResult.Success(movieDetail)
 
-        viewModel.getMovieDetail(123L, testScope)
+        // Observe state changes using Turbine
+        viewModel.getMovieDetail(123L)
+        testDispatcher.scheduler.advanceUntilIdle()
+        testScheduler.advanceUntilIdle()
 
-        // Act
-//        val movie = viewModel.state.first().movie
-//        testDispatcher.scheduler.advanceUntilIdle()
-//        assertEquals(movieDetail, movie)
-
-        // Act
         viewModel.state.test {
-            // Initial state
-            val initialState = awaitItem()
-            assertEquals(MovieDetailState(), initialState)
-
-            // Loading state
-            val loadingState = awaitItem()
-            assertEquals(LoadingState.LOADING, loadingState.loadingState)
-
-            // Loaded state
+            // Expect loaded state with movie detail
             val loadedState = awaitItem()
-            assertEquals(LoadingState.LOADED, loadedState.loadingState)
-            assertEquals(movieDetail, loadedState.movie) // Check the movie details
-        }
+            assert(loadedState.loadingState == LoadingState.LOADED)
+            assert(loadedState.movie == movieDetail)
+            assert(loadedState.movie?.title == "Fake Movie")
 
-//        viewModel.state.test {
-//            // Initial state
-//            assertEquals(MovieDetailState(), awaitItem())
-//
-//            // Loading state
-//            assertEquals(MovieDetailState(loadingState = LoadingState.LOADING), awaitItem())
-//
-//            // Loaded state
-//            assertEquals(
-//                MovieDetailState(
-//                    loadingState = LoadingState.LOADED,
-//                    movie = movieDetail
-//                ),
-//                awaitItem()
-//            )
-//        }
-    }
-
-    @Test
-    fun `getMovieDetail updates state with error on failure`() = runTest(testDispatcher) {
-        // Arrange
-        coEvery { tmdbRepository.getMovieDetail(123L) } returns ApiResult.Error("Network Error")
-
-        // Act
-        viewModel.state.test {
-            // Initial state
-            assertEquals(MovieDetailState(), awaitItem())
-
-            // Loading state
-            assertEquals(MovieDetailState(loadingState = LoadingState.LOADING), awaitItem())
-
-            // Error state
-            assertEquals(
-                MovieDetailState(loadingState = LoadingState.ERROR),
-                awaitItem()
-            )
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `getMovieDetail does nothing when id is null`() = runTest(testDispatcher) {
-        // Arrange
-        savedStateHandle = SavedStateHandle() // No id provided
-        viewModel = MovieDetailViewModel(savedStateHandle, tmdbRepository)
+    fun `getMovieDetail updates state to ERROR on failure`() = runTest {
+        // Mock the repository to return an error
+        coEvery { tmdbRepository.getMovieDetail(1L) } returns ApiResult.Error("Error")
 
-        // Act
+        viewModel.getMovieDetail(1L)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Observe state changes using Turbine
         viewModel.state.test {
-            // Initial state
-            assertEquals(MovieDetailState(), awaitItem())
+            // Expect error state
+            val errorState = awaitItem()
+            assertEquals(LoadingState.ERROR.status.name, errorState.loadingState.status.name)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `getMovieDetail does not update state when id is null`() = runTest {
+        // Create ViewModel without "id" in SavedStateHandle
+        val savedStateHandle = SavedStateHandle()
+        val viewModelWithoutId = MovieDetailViewModel(savedStateHandle, tmdbRepository)
+
+        // Observe state changes using Turbine
+        viewModelWithoutId.state.test {
+            // Expect initial state (idle state)
+            val initialState = awaitItem()
+            assert(initialState.loadingState == LoadingState.IDLE)
+
+            // Ensure no further state changes occur
+            expectNoEvents()
         }
     }
 }

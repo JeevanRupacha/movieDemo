@@ -2,6 +2,9 @@ package com.demo.moviedemo.data.tmdbMovie
 
 import com.demo.moviedemo.data.repository.TMDBRepository
 import com.demo.moviedemo.data.utils.DataRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import okhttp3.Dispatcher
 
 
 class TMDBRepoImp(
