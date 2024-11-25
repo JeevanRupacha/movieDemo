@@ -47,7 +47,6 @@ Movie Demo follows a **MVVM (Model-View-ViewModel)** architecture pattern, promo
 * **MovieDetailViewModel:** Fetches and displays detailed information about a specific movie.
 * **TMDBRepository:** Provides access to movie data from both the TMDb API and the local database.
 * **TMDBApi:** Defines the API endpoints for interacting with the TMDb API using Retrofit.
-* **MovieDatabase:** Defines the Room database schema for storing movie data locally.
 
 ## Getting Started
 
