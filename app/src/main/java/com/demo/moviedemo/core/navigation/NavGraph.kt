@@ -50,7 +50,8 @@ fun NavGraphBuilder.movieDetail(
         val state by vm.state.collectAsStateWithLifecycle()
 
         MovieDetailScreen(
-            state = state
+            state = state,
+            onBack = navController::navigateUp
         )
     }
 }

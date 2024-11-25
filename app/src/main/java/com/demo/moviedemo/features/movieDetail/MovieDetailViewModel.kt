@@ -27,7 +27,7 @@ class MovieDetailViewModel @Inject constructor(
     private val tmdbRepository: TMDBRepository
 ) : ViewModel() {
 
-    val id = savedStateHandle.get<Long>("id")
+    private val id = savedStateHandle.get<Long>("id")
 
     private val _state = MutableStateFlow(MovieDetailState())
     val state = _state.asStateFlow()

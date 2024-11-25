@@ -51,6 +51,7 @@ import com.demo.moviedemo.data.model.SpokenLanguage
 @Composable
 fun MovieDetailScreen(
     state: MovieDetailState,
+    onBack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -58,7 +59,7 @@ fun MovieDetailScreen(
         topBar = {
             TopAppBar(
                 title = "",
-                onBack = {}
+                onBack = onBack
             )
         }
     ) { innerPadding ->
